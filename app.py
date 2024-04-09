@@ -2,15 +2,14 @@ import streamlit as st
 from wv import Model
 from scipy.stats import zscore
 
-model = Model("glove_short.txt")
-
-
 st.title("Remove Outliers from a list of words")
 
-print("Loading model from models/glove_short.txt ...")
-print("Loaded in", model.load_time, "secs")
+# Debugging print statement to check file path
+print("Initializing Model object...")
+print("File path:", "glove_short.txt")
+model = Model("glove_short.txt")
 
-words = st.text_input("Please enter a comma separated list of words:")
+words = st.text_input("Please enter a comma-separated list of words:")
 
 if words:
     words = words.split(",")
