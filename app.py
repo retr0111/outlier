@@ -1,5 +1,5 @@
 import streamlit as st
-from wv import Model
+from gensim.models import KeyedVectors
 from scipy.stats import zscore
 
 st.title("Remove Outliers from a list of words")
@@ -7,7 +7,7 @@ st.title("Remove Outliers from a list of words")
 # Debugging print statement to check file path
 print("Initializing Model object...")
 print("File path:", "glove_short.txt")
-model = Model("glove_short.txt")
+model = KeyedVectors.load_word2vec_format("path/to/glove_short.txt", binary=False)
 
 words = st.text_input("Please enter a comma-separated list of words:")
 
