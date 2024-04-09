@@ -1,23 +1,19 @@
 import streamlit as st
-from gensim.models import KeyedVectors
+from model import Model
 from scipy.stats import zscore
+import numpy as np
 
-st.title("Remove Outliers from a list of words")
+# Load Stanford GloVe model
+model = Model("glove.6B.100d.txt")  # replace with the path to your GloVe model file
 
-# Debugging print statement to check file path
-print("Initializing Model object...")
-print("File path:", "glove_short.txt")
-model = KeyedVectors.load_word2vec_format("path/to/glove_short.txt", binary=False)
+# Function to remove outliers
+def remove_outliers(words):
+    word_vectors = [model.find_word(word.lower()).vector for word in words if model.find_word(word.lower())]
+    if len(word_vectors) < 3: return None
+    word_vectors = np.array(word_vectors)
+    if len(word_vectors.shape) > 1:
+        word_vectors = word_vectors.reshape(-1, 1)
+    z_scores = zscore(word_vectors)
+    return [word for word, z_score in zip(words, z_scores) if abs(z_score) < 3]
 
-words = st.text_input("Please enter a comma-separated list of words:")
-
-if words:
-    words = words.split(",")
-    if len(words) < 3:
-        st.error("Please enter at least 3 words.")
-    else:
-        filtered_words = [word.strip() for word in words if word.strip() in model]
-        z_scores = zscore([model[word] for word in filtered_words])
-        filtered_words = [filtered_words[i] for i, z_score in enumerate(z_scores) if abs(z_score) < 3]
-
-        st.success(f"With outliers removed, your list looks like this: {', '.join(filtered_words)}")
+# Streamlit app
