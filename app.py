@@ -2,7 +2,8 @@ import streamlit as st
 from wv import Model
 from scipy.stats import zscore
 
-model = Model("models/glove_short.txt")
+model = Model("/full/path/to/your/models/glove_short.txt")
+
 
 st.title("Remove Outliers from a list of words")
 
